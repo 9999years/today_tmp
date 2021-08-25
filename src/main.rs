@@ -2,6 +2,7 @@
 
 use std::path::PathBuf;
 
+use chrono::{DateTime, Local};
 use color_eyre::eyre::{self, WrapErr};
 use structopt::StructOpt;
 use tracing::{event, info, instrument, span, warn, Level};
@@ -16,6 +17,22 @@ fn main() -> eyre::Result<()> {
 
     create_repo_path(&args.repo_path)?;
     git_init(&args.repo_path)?;
+
+    let today_dir = args
+        .repo_path
+        .join(format!("{}", Local::now().format(DATE_FMT)));
+
+    if !today_dir.exists() {
+        info!("Creating {}", &today_dir.display());
+        std::fs::create_dir_all(&today_dir)
+            .wrap_err_with(|| format!("Failed to create {:?}", &today_dir))?;
+    }
+
+    ensure_symlink(&args.today_path, &today_dir)?;
+
+    // git commit
+    // remove empty dirs
+    // make prev link
 
     Ok(())
 }

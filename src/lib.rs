@@ -9,7 +9,7 @@ use tracing::{info, instrument, span, Level};
 
 pub use chrono;
 
-static DATE_FMT: &str = "%Y-%m-%d";
+pub static DATE_FMT: &str = "%Y-%m-%d";
 static FILENAME_DATETIME_FMT: &str = "%Y-%m-%dT%H_%M_%S";
 
 #[instrument]
